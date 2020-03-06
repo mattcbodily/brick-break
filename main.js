@@ -23,15 +23,15 @@ let bricks = [];
 
 (function brickMaker(){
     let id = 0;
-    let brickX = 20;
-    let brickY = 20;
+    let brickX = 30;
+    let brickY = 30;
     for(let i = 1; i <= 21; i++){
         bricks.push({id, x: brickX, y: brickY, height: 30, width: 110})
 
-        brickX += 125;
+        brickX += 120;
         
         if(brickX + 110 >= canvas.width){
-            brickX = 20;
+            brickX = 30;
             brickY += 50;
         }
     }
@@ -63,11 +63,17 @@ function draw(){
         } else if(ball.y === 0){
             ball.ySpeed *= -1;
         } else if(ball.y === canvas.height){
+            ctx.font = '40px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('Game Over', canvas.width / 2, 240)
             cancelAnimationFrame(animation)
         }
 
         for(let i = 0; i < bricks.length; i++){
-            if(ball.y === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width){
+            if((ball.y - scale === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || ((ball.x + scale === bricks[i].x || ball.x === bricks[i].x + bricks[i].width) && ball.y + scale >= bricks[i].y && ball.y + scale <= bricks[i].y + bricks[i].height)){
+                //still need to add the conditions to check collision with the top of the bricks
+                ball.ySpeed *= -1;
+                ball.xSpeed *= -1;
                 bricks.splice(i, 1);
             }
         }
