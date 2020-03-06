@@ -1,0 +1,11 @@
+body {
+    background-color: #1C2131;
+    color: white;
+    font-family: 'Orbitron';
+    text-align: center;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 25px 0px;
+}
