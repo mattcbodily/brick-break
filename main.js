@@ -19,6 +19,25 @@ const scale = 20;
 let player;
 let ball;
 
+let bricks = [];
+
+(function brickMaker(){
+    let id = 0;
+    let brickX = 20;
+    let brickY = 20;
+    for(let i = 1; i <= 21; i++){
+        bricks.push({id, x: brickX, y: brickY, height: 30, width: 110})
+
+        brickX += 125;
+        
+        if(brickX + 110 >= canvas.width){
+            brickX = 20;
+            brickY += 50;
+        }
+    }
+}())
+
+
 function draw(){
     player = new Player();
     ball = new Ball();
@@ -27,6 +46,10 @@ function draw(){
     
     return (function animate(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for(let i = 0; i < bricks.length; i++){
+            ctx.fillRect(bricks[i].x, bricks[i].y, bricks[i].width, bricks[i].height)
+        }
+
         ctx.fillRect(ball.x, ball.y, scale, scale);
         ctx.fillRect(player.x, player.y, player.width, scale);
 
@@ -41,6 +64,12 @@ function draw(){
             ball.ySpeed *= -1;
         } else if(ball.y === canvas.height){
             cancelAnimationFrame(animation)
+        }
+
+        for(let i = 0; i < bricks.length; i++){
+            if(ball.y === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width){
+                bricks.splice(i, 1);
+            }
         }
 
         let animation = requestAnimationFrame(animate)
