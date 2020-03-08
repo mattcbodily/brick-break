@@ -70,8 +70,7 @@ function draw(){
         }
 
         for(let i = 0; i < bricks.length; i++){
-            if((ball.y - scale === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || ((ball.x + scale === bricks[i].x || ball.x === bricks[i].x + bricks[i].width) && ball.y + scale >= bricks[i].y && ball.y + scale <= bricks[i].y + bricks[i].height)){
-                //still need to add the conditions to check collision with the top of the bricks
+            if((ball.y - scale === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || ((ball.x + scale === bricks[i].x || ball.x === bricks[i].x + bricks[i].width) && ball.y + scale >= bricks[i].y && ball.y + scale <= bricks[i].y + bricks[i].height) || (ball.y === bricks[i].y - bricks[i].height && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width)){
                 ball.ySpeed *= -1;
                 ball.xSpeed *= -1;
                 bricks.splice(i, 1);
