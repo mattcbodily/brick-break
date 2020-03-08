@@ -1,6 +1,17 @@
 const canvas = document.getElementById('game-board');
 const ctx = canvas.getContext('2d');
 
+const bgMusic = new Audio();
+const ricochet = new Audio();
+const gameWin = new Audio();
+const gameOver = new Audio();
+
+bgMusic.src = 'assets/arcade-music.mp3';
+bgMusic.loop = 'true';
+ricochet.src = 'assets/ricochet.mp3';
+gameWin.src = 'assets/game-win.mp3';
+gameOver.src = 'assets/game-over.mp3';
+
 function Player(){
     this.x = 340;
     this.y = 460;
@@ -21,32 +32,33 @@ let ball;
 
 let bricks = [];
 
-(function brickMaker(){
-    let id = 0;
-    let row = 1;
-    let brickX = 20;
-    let brickY = 20;
-    for(let i = 1; i <= 21; i++){
-        bricks.push({id, row, x: brickX, y: brickY, height: 28, width: 116})
-
-        brickX += 124;
-        
-        if(brickX + 116 >= canvas.width){
-            row++
-            brickX = 20;
-            brickY += 40;
-        }
-    }
-}())
 
 
 function draw(){
+    bgMusic.play()
     player = new Player();
     ball = new Ball();
     ctx.fillStyle = '#FFF';
     ctx.font = '40px Orbitron';
     ctx.textAlign = 'center';
     ctx.fillRect(player.x, player.y, player.width, scale);
+    (function brickMaker(){
+        let id = 0;
+        let row = 1;
+        let brickX = 20;
+        let brickY = 20;
+        for(let i = 1; i <= 21; i++){
+            bricks.push({id, row, x: brickX, y: brickY, height: 28, width: 116})
+                            
+            brickX += 124;
+                                    
+            if(brickX + 116 >= canvas.width){
+                row++
+                brickX = 20;
+                brickY += 40;
+            }
+        }
+    }())
     
     return (function animate(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -76,9 +88,11 @@ function draw(){
         }
 
         if((ball.x + scale === player.x || ball.x === player.x + player.width) && (ball.y >= player.y - scale && ball.y - scale <= player.y + scale)){
+            ricochet.play()
             player.xSpeed = 0;
             ball.xSpeed *= -2;
         } else if(ball.x + scale >= player.x && ball.x <= player.x + player.width && (ball.y >= player.y - scale && ball.y <= player.y)){
+            ricochet.play()
             ball.ySpeed *= -1;
             if((player.xSpeed > 0 && ball.xSpeed <= 0) || (player.xSpeed < 0 && ball.xSpeed >= 0)){
                 ball.xSpeed *= -1;
@@ -92,21 +106,29 @@ function draw(){
         } else if(ball.y <= 0){
             ball.ySpeed *= -1;
         } else if(ball.y >= canvas.height){
-            ctx.fillText('Game Over', canvas.width / 2, 240)
-            cancelAnimationFrame(animation)
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+            gameOver.play();
+            ctx.fillText('Game Over', canvas.width / 2, 240);
+            cancelAnimationFrame(animation);
         }
 
         for(let i = 0; i < bricks.length; i++){
             if((ball.y - scale === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || (ball.y === bricks[i].y - bricks[i].height && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width)){
+                ricochet.play()
                 ball.ySpeed *= -1;
                 bricks.splice(i, 1);
             } else if((ball.x + scale === bricks[i].x || ball.x === bricks[i].x + bricks[i].width) && ball.y + scale >= bricks[i].y && ball.y + scale <= bricks[i].y + bricks[i].height){
+                ricochet.play()
                 ball.xSpeed *= -1;
                 bricks.splice(i, 1);
             }
         }
 
         if(bricks.length === 0){
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+            gameWin.play();
             ctx.fillText('You Won!', canvas.width / 2, 240);
             cancelAnimationFrame(animation);
         }
@@ -115,7 +137,12 @@ function draw(){
     }())
 }
 
-draw();
+
+document.addEventListener('keydown', function(event){
+    if(event.keyCode === 32){
+        draw();
+    }
+})
 
 document.addEventListener('keydown', function(event){
     if(event.keyCode === 37 && player.x !== 0){
