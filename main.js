@@ -32,15 +32,17 @@ let ball;
 
 let bricks = [];
 
-
+window.onload = function(){
+    ctx.fillStyle = '#FFF';
+    ctx.font = '40px Orbitron';
+    ctx.textAlign = 'center';
+    ctx.fillText('Press Spacebar to Start', canvas.width / 2, canvas.height / 2);
+}
 
 function draw(){
     bgMusic.play()
     player = new Player();
     ball = new Ball();
-    ctx.fillStyle = '#FFF';
-    ctx.font = '40px Orbitron';
-    ctx.textAlign = 'center';
     ctx.fillRect(player.x, player.y, player.width, scale);
     (function brickMaker(){
         let id = 0;
