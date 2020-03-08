@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 function Player(){
     this.x = 350;
     this.y = 450;
-    this.xSpeed = 25;
+    this.xSpeed = 0;
     this.width = 125;
 }
 
@@ -58,6 +58,9 @@ function draw(){
 
         if(ball.x >= player.x && ball.x <= player.x + player.width && ball.y === player.y - scale){
             ball.ySpeed *= -1;
+            if((player.xSpeed > 0 && ball.xSpeed <= 0) || (player.xSpeed < 0 && ball.xSpeed >= 0)){
+                ball.xSpeed *= -1;
+            }
         } else if(ball.x === 0 || ball.x + scale === canvas.width){
             ball.xSpeed *= -1;
         } else if(ball.y === 0){
@@ -71,8 +74,11 @@ function draw(){
 
         for(let i = 0; i < bricks.length; i++){
             if((ball.y - scale === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || ((ball.x + scale === bricks[i].x || ball.x === bricks[i].x + bricks[i].width) && ball.y + scale >= bricks[i].y && ball.y + scale <= bricks[i].y + bricks[i].height) || (ball.y === bricks[i].y - bricks[i].height && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width)){
-                ball.ySpeed *= -1;
-                ball.xSpeed *= -1;
+                if(ball.y - scale === bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width){
+                    ball.ySpeed *= -1;
+                } else if((ball.x + scale === bricks[i].x || ball.x === bricks[i].x + bricks[i].width) && ball.y + scale >= bricks[i].y && ball.y + scale <= bricks[i].y + bricks[i].height){
+                    ball.xSpeed *= -1;
+                }
                 bricks.splice(i, 1);
             }
         }
@@ -84,12 +90,15 @@ function draw(){
 draw();
 
 document.addEventListener('keydown', function(event){
+    //still need to find a way to make xSpeed equal 0 to not mess with ball direction
     if(event.keyCode === 37){
         if(player.x !== 0){
-            player.x -= player.xSpeed;
+            player.xSpeed = -25;
+            player.x += player.xSpeed;
         }
     } else if(event.keyCode === 39){
         if(player.x + 125 !== canvas.width){
+            player.xSpeed = 25;
             player.x += player.xSpeed;
         }
     }
