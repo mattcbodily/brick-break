@@ -105,16 +105,21 @@ function draw(){
         } else if(ball.x + scale >= player.x && ball.x <= player.x + player.width && (ball.y >= player.y - scale && ball.y <= player.y)){
             ricochet.play()
             ball.ySpeed *= -1;
-            if(ball.spin){
+            if(ball.spin && player.xSpeed === 0){
                 ball.spin = false;
                 ball.xSpeed /= 2;
             }
             if((player.xSpeed > 0 && ball.xSpeed <= 0) || (player.xSpeed < 0 && ball.xSpeed >= 0)){
-                if(!ball.spin){
-                    ball.spin = true;
-                    ball.xSpeed *= 2;
+                ball.spin = true;
+                if(ball.xSpeed === 2 || ball.xSpeed === 4){
+                    ball.xSpeed = -4;
+                } else if(ball.xSpeed === -2 || ball.xSpeed === -4){
+                    ball.xSpeed = 4;
+                } else if(ball.xSpeed === 3 || ball.xSpeed === 6){
+                    ball.xSpeed = -5;
+                } else if(ball.xSpeed === -3 || ball.xSpeed === -6){
+                    ball.xSpeed = 5;
                 }
-                ball.xSpeed *= -1;
             }
         } else if(ball.x <= 0){
             ball.x = 1;
@@ -135,28 +140,10 @@ function draw(){
         for(let i = 0; i < bricks.length; i++){
             if(((ball.x + scale >= bricks[i].x && ball.x + scale <= bricks[i].x + 5) || (ball.x <= bricks[i].x + bricks[i].width && ball.x >= bricks[i].x + bricks[i].width - 5)) && ((ball.y <= bricks[i].y && ball.y >= bricks[i].y - bricks[i].height) || (ball.y - scale <= bricks[i].y && ball.y - scale >= bricks[i].y - bricks[i].height))){
                 ricochet.play()
-                // if(ball.xSpeed < 0){
-                //     if(ball.xSpeed !== -2){
-                //         ball.xSpeed = -2
-                //     }
-                // } else if(ball.xSpeed > 0){
-                //     if(ball.xSpeed !== 2){
-                //         ball.xSpeed = 2
-                //     }
-                // }
                 ball.xSpeed *= -1;
                 bricks.splice(i, 1);
             } else if((ball.y - scale <= bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || (ball.y >= bricks[i].y - bricks[i].height && ball.y <= bricks[i].y && ball.x >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width)){
                 ricochet.play();
-                // if(ball.xSpeed < 0){
-                //     if(ball.xSpeed !== -2){
-                //         ball.xSpeed = -2
-                //     }
-                // } else if(ball.xSpeed > 0){
-                //     if(ball.xSpeed !== 2){
-                //         ball.xSpeed = 2
-                //     }
-                // }
                 ball.ySpeed *= -1;
                 bricks.splice(i, 1);
             }
