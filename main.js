@@ -24,6 +24,7 @@ function Ball(){
     this.y = 240;
     this.xSpeed = 2;
     this.ySpeed = 2;
+    this.spin = false;
 }
 
 const scale = 20;
@@ -83,6 +84,14 @@ function draw(){
         ball.x += ball.xSpeed;
         ball.y += ball.ySpeed;
 
+        if(bricks.length <= 10 && !ball.spin){
+            if(ball.xSpeed < 0 && ball.xSpeed !== -3){
+                ball.xSpeed = -3
+            } else if(ball.xSpeed > 0 && ball.xSpeed !== 3){
+                ball.xSpeed = 3
+            }
+        }
+
         player.x += player.xSpeed;
 
         if(player.x === 0 || player.x + player.width === canvas.width){
@@ -96,7 +105,15 @@ function draw(){
         } else if(ball.x + scale >= player.x && ball.x <= player.x + player.width && (ball.y >= player.y - scale && ball.y <= player.y)){
             ricochet.play()
             ball.ySpeed *= -1;
+            if(ball.spin){
+                ball.spin = false;
+                ball.xSpeed /= 2;
+            }
             if((player.xSpeed > 0 && ball.xSpeed <= 0) || (player.xSpeed < 0 && ball.xSpeed >= 0)){
+                if(!ball.spin){
+                    ball.spin = true;
+                    ball.xSpeed *= 2;
+                }
                 ball.xSpeed *= -1;
             }
         } else if(ball.x <= 0){
