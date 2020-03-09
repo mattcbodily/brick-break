@@ -9,3 +9,19 @@ h1 {
     font-size: 40px;
     margin: 25px 0px;
 }
+
+p {
+    font-size: 24px;
+    margin: 8px;
+}
+
+ul {
+    width: 500px;
+    margin: 0 auto;
+}
+
+li {
+    font-size: 16px;
+    margin: 20px;
+    text-align: left;
+}

@@ -152,6 +152,7 @@ function draw(){
         
 
         if(bricks.length === 0){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             bgMusic.pause();
             bgMusic.currentTime = 0;
             gameWin.play();
