@@ -80,14 +80,6 @@ function draw(){
         ctx.fillStyle = '#CABAC8';
         ctx.fillRect(player.x, player.y, player.width, scale);
 
-        if(bricks.length <= 14 && bricks.length > 7){
-            ball.xSpeed = 3;
-            ball.ySpeed = 3;
-        } else if(bricks.length <= 7){
-            ball.xSpeed = 4;
-            ball.ySpeed = 4;
-        }
-
         ball.x += ball.xSpeed;
         ball.y += ball.ySpeed;
 
@@ -108,10 +100,10 @@ function draw(){
                 ball.xSpeed *= -1;
             }
         } else if(ball.x <= 0){
-            ball.x = 0;
+            ball.x = 1;
             ball.xSpeed *= -1;
         } else if(ball.x + scale >= canvas.width){
-            ball.x = canvas.width - scale;
+            ball.x = canvas.width - scale + 1;
             ball.xSpeed *= -1;
         } else if(ball.y <= 0){
             ball.ySpeed *= -1;
@@ -126,10 +118,28 @@ function draw(){
         for(let i = 0; i < bricks.length; i++){
             if(((ball.x + scale >= bricks[i].x && ball.x + scale <= bricks[i].x + 5) || (ball.x <= bricks[i].x + bricks[i].width && ball.x >= bricks[i].x + bricks[i].width - 5)) && ((ball.y <= bricks[i].y && ball.y >= bricks[i].y - bricks[i].height) || (ball.y - scale <= bricks[i].y && ball.y - scale >= bricks[i].y - bricks[i].height))){
                 ricochet.play()
+                // if(ball.xSpeed < 0){
+                //     if(ball.xSpeed !== -2){
+                //         ball.xSpeed = -2
+                //     }
+                // } else if(ball.xSpeed > 0){
+                //     if(ball.xSpeed !== 2){
+                //         ball.xSpeed = 2
+                //     }
+                // }
                 ball.xSpeed *= -1;
                 bricks.splice(i, 1);
             } else if((ball.y - scale <= bricks[i].y && ball.x + scale >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width) || (ball.y >= bricks[i].y - bricks[i].height && ball.y <= bricks[i].y && ball.x >= bricks[i].x && ball.x <= bricks[i].x + bricks[i].width)){
                 ricochet.play();
+                // if(ball.xSpeed < 0){
+                //     if(ball.xSpeed !== -2){
+                //         ball.xSpeed = -2
+                //     }
+                // } else if(ball.xSpeed > 0){
+                //     if(ball.xSpeed !== 2){
+                //         ball.xSpeed = 2
+                //     }
+                // }
                 ball.ySpeed *= -1;
                 bricks.splice(i, 1);
             }
